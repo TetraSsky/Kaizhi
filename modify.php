@@ -131,6 +131,7 @@
 
         // Connexion à la base de données avec VARIABLE DE CONNEXION (Pour éviter de les écrires en dur / Push sur le Github)
         // Utilisation de ".env.php" pour le stockage des variables des données sensibles
+        // Utilisation de "parse_ini_file" pour lire les variables depuis le fichier .env.php
         $env_vars = parse_ini_file('.env.php');
         $host = $env_vars['HOST'];
         $user = $env_vars['USER'];
@@ -154,6 +155,8 @@
 
         // Gestion de la soumission du formulaire de modification (POST)
         if (($_SERVER['REQUEST_METHOD'] == 'POST') && (isset($_POST['newgameid']) && !empty($_POST['newgameid'])) && (isset($_POST['newtitre']) && !empty($_POST['newtitre'])) && (isset($_POST['oldgameid']) && !empty($_POST['oldgameid']))) {   
+            
+            // Récupération des données du formulaire avec gestion pour les données optionnelles, même vides
             $oldgameid = $_POST['oldgameid'];
             $gameid = $_POST['newgameid'];
             $titre = $_POST['newtitre'];

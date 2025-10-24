@@ -132,6 +132,7 @@
 
         // Connexion à la base de données avec VARIABLE DE CONNEXION (Pour éviter de les écrires en dur / Push sur le Github)
         // Utilisation de ".env.php" pour le stockage des variables des données sensibles
+        // Utilisation de "parse_ini_file" pour lire les variables depuis le fichier .env.php
         $env_vars = parse_ini_file('.env.php');
         $host = $env_vars['HOST'];
         $user = $env_vars['USER'];
@@ -160,6 +161,7 @@
         if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['gameid']) && !empty($_POST['gameid'])) {
             $query = $bdd->prepare("INSERT INTO games (gameid, titre, description, prix, image, liensteam) VALUES (:gameid, :titre, :description, :prix, :image, :liensteam)");
             
+            // Récupération des données du formulaire avec gestion pour les données optionnelles, même vides
             $gameid = $_POST['gameid'];
             $titre = $_POST['titre'];
             $description = $_POST['description'] ?? '';
