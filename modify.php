@@ -127,7 +127,7 @@
 </head>
 <body>
     <?php
-        include("Game.php");
+        include("./modele/Game.php");
 
         // Connexion à la base de données avec VARIABLE DE CONNEXION (Pour éviter de les écrires en dur / Push sur le Github)
         // Utilisation de ".env.php" pour le stockage des variables des données sensibles
