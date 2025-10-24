@@ -1,3 +1,4 @@
+<?php session_start(); ?>
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -151,7 +152,7 @@
             $query->execute();
             $games = $query->fetchAll(PDO::FETCH_CLASS, 'Game');
         } else {
-            $query = $bdd->query("SELECT * FROM games ORDER BY gameid");
+            $query = $bdd->query("SELECT * FROM games ORDER BY gameid LIMIT 500");
             $games = $query->fetchAll(PDO::FETCH_CLASS, 'Game');
         }
 
@@ -165,6 +166,11 @@
             $prix = $_POST['prix'] ?? 0;
             $image = $_POST['image'] ?? '';
             $liensteam = $_POST['liensteam'] ?? '';
+
+            // Convertir le prix en centimes
+            if ($prix > 0) {
+                $prix = (int)($prix * 100);
+            }
             
             $checkQuery = $bdd->prepare("SELECT COUNT(*) FROM games WHERE gameid = :gameid");
             $checkQuery->bindParam(':gameid', $gameid, PDO::PARAM_INT);
@@ -249,7 +255,7 @@
         <!-- Formulaire d'ajout de jeu -->
         <div class="card card-custom p-4 mb-5">
             <h2 class="section-title h4"><i class="fas fa-plus-circle me-2"></i>Ajouter un nouveau jeu</h2>
-            <form method="POST" action="index.php" id="gameForm" class="row g-3">
+            <form method="POST" class="row g-3">
                 <div class="col-md-6 col-lg-2">
                     <label class="form-label">GameID</label>
                     <input type="number" name="gameid" class="form-control form-control-custom" placeholder="GameID *" required>
@@ -321,7 +327,7 @@
                                         ?>
                                     </td>
                                     <td>
-                                        <?php if ($game->getImage() && $game->getImage() != 'N/A'): ?>
+                                        <?php if ($game->getImage() && $game->getImage() != ''): ?>
                                             <img src="<?php echo $game->getImage(); ?>" class="game-image" width="120" alt="<?php echo $game->getTitre(); ?>">
                                         <?php else: ?>
                                             <img src="./images/noimage.png" class="game-image" width="120" alt="Image non disponible">
@@ -342,6 +348,13 @@
                                             class="btn btn-sm btn-danger-custom">
                                             <i class="fas fa-trash me-1"></i>
                                             Supprimer
+                                        </a>
+
+                                        <a href="modify.php?modify=<?php echo $game->getGameid(); ?>" 
+                                            onclick="return confirm('Souhaitez-vous modifier ce jeu ?')"
+                                            class="btn btn-sm btn-primary-custom">
+                                            <i class="fas fa-pencil me-1"></i>
+                                            Modifier
                                         </a>
                                     </td>
                                 </tr>
